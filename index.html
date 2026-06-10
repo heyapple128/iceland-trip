@@ -333,11 +333,21 @@ const DAYS = [
     ],
     note:'柏林自由活动',
   },
-  { day:'D15', date:'6/28', name:'柏林→返程', nameCn:'柏林最后一日', route:'柏林→返程',
+  { day:'D15', date:'6/28', name:'柏林→返程', nameCn:'柏林→上海', route:'柏林(20:40)✈雅典→上海',
+    flight:{
+      segments:[
+        { airline:'爱琴海航空 A3823', from:'柏林勃兰登堡T1 20:40', to:'雅典ATH 00:25(+1)', note:'3h45m' },
+        { airline:'吉祥航空 HO1658', from:'雅典ATH 14:20', to:'上海浦东T2 05:05(+1)', note:'9h45m' },
+      ],
+      booking:'PXWGNJ',
+      passengers:'WANG/DANYANG · XIN/YUJIA',
+    },
     points:[
-      { id:'d15-1', type:'attraction', lat:52.516,lng:13.378, is:'Brandenburger Tor', cn:'勃兰登堡门', desc:'自由活动·准备返程' },
+      { id:'d15-1', type:'airport', lat:52.366,lng:13.503, is:'BER T1', cn:'柏林勃兰登堡T1', desc:'20:40 爱琴海A3823→雅典' },
+      { id:'d15-2', type:'airport', lat:37.936,lng:23.947, is:'ATH', cn:'雅典国际机场', desc:'00:25抵达·中转13h55m·行李直达' },
+      { id:'d15-3', type:'airport', lat:31.144,lng:121.808, is:'PVG T2', cn:'上海浦东T2', desc:'6/30 05:05抵达吉祥HO1658' },
     ],
-    note:'返程航班待确认',
+    note:'雅典中转13h55m·行李直达·无需过境签',
   },
 ];
 
