@@ -240,8 +240,9 @@ const DAYS = [
       { id:'d5-5', type:'camp', lat:65.260,lng:-13.800, is:'Egilsstaðir Campsite', cn:'埃基尔斯塔迪尔营地', desc:'设施非常好' },
     ], camp:{ name:'Egilsstaðir Campsite', note:'设施非常好' }
   },
-  { day:'D6', date:'6/19', name:'北部', nameCn:'北部（米湖）', route:'胡萨维克 → Hverir → Dimmuborgir → Hamrar',
+  { day:'D6', date:'6/19', name:'北部', nameCn:'北部（米湖）', route:'埃基尔斯塔迪尔 → 胡萨维克 → Hverir → Hamrar',
     points:[
+      { id:'d6-0', type:'camp', lat:65.260,lng:-13.800, is:'Egilsstaðir', cn:'埃基尔斯塔迪尔（出发）', desc:'D5营地→胡萨维克 ~3h' },
       { id:'d6-1', type:'attraction', lat:66.052,lng:-17.344, is:'Húsavík', cn:'胡萨维克', desc:'观鲸小镇' },
       { id:'d6-2', type:'attraction', lat:65.635,lng:-16.830, is:'Hverir', cn:'地热泥浆区', desc:'硫磺地热' },
       { id:'d6-3', type:'attraction', lat:65.620,lng:-16.880, is:'Grjótagjá', cn:'熔岩洞（权游取景）', desc:'蓝色温泉洞穴' },
@@ -382,9 +383,10 @@ const ROAD_META = {
   'd4-2': { min:2, road:'easy' },     // Jökulsárlón→Diamond Beach 同一区域
   'd4-3': { min:35, road:'hard' },    // Diamond Beach→Vestrahorn 部分碎石路
   'd5-2': { min:40, road:'hard' },    // Fáskrúðsfjörður→Seyðisfjörður 山路93号
-  'd6-1': { min:3, road:'easy' },     // Hverir→Grjótagjá 米湖区域
-  'd6-2': { min:4, road:'easy' },     // Grjótagjá→Dimmuborgir
-  'd6-3': { min:3, road:'easy' },     // Dimmuborgir→Hverfjall
+  'd6-0': { min:170, road:'normal' },  // Egilsstaðir→Húsavík 1号公路+85号路
+  'd6-1': { min:50, road:'normal' },   // Húsavík→Hverir 85号路南下
+  'd6-2': { min:4, road:'easy' },      // Hverir→Grjótagjá 米湖区域
+  'd6-3': { min:3, road:'easy' },      // Grjótagjá→Dimmuborgir
   'd7-2': { min:220, road:'hard' },   // Akureyrarkirkja→Kirkjufell ~300km Route1+54 部分窄路/长距离
   'd7-3': { min:1, road:'easy' },     // Kirkjufell→营地 步行
   'd8-2': { min:12, road:'easy' },    // Arnarstapi→Búðakirkja
