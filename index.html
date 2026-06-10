@@ -305,7 +305,16 @@ const DAYS = [
     ],
     camp:{ name:'Candlewood Suites', tags:['🏨 酒店','雷克雅未克'], note:'上午退房·行李寄存' }
   },
-  { day:'D12', date:'6/26', name:'飞柏林', nameCn:'米兰→柏林', route:'米兰利纳特(16:55)✈柏林(18:35)',
+  { day:'D12', date:'6/25', name:'佛罗伦萨', nameCn:'米兰→佛罗伦萨', route:'米兰中央车站→佛罗伦萨→米兰',
+    points:[
+      { id:'d12-1', type:'attraction', lat:45.485,lng:9.202, is:'Milano Centrale', cn:'米兰中央车站', desc:'乘高铁往佛罗伦萨 ~1h40min' },
+      { id:'d12-2', type:'attraction', lat:43.773,lng:11.256, is:'Firenze S.M.N.', cn:'佛罗伦萨火车站', desc:'抵达佛罗伦萨' },
+      { id:'d12-3', type:'attraction', lat:43.773,lng:11.256, is:'Duomo di Firenze', cn:'圣母百花大教堂', desc:'佛罗伦萨地标' },
+      { id:'d12-4', type:'attraction', lat:43.768,lng:11.253, is:'Ponte Vecchio', cn:'老桥', desc:'最古老的石拱桥' },
+    ],
+    note:'高铁当日往返，晚上回米兰住',
+  },
+  { day:'D13', date:'6/26', name:'飞柏林', nameCn:'米兰→柏林', route:'米兰利纳特(16:55)✈柏林(18:35)',
     flight:{
       segments:[
         { airline:'易捷航空 U25072', from:'米兰利纳特 16:55', to:'柏林勃兰登堡T1 18:35', note:'1h40m' },
@@ -314,9 +323,21 @@ const DAYS = [
       passengers:'Apple · Yang',
     },
     points:[
-      { id:'d12-1', type:'airport', lat:45.449,lng:9.278, is:'LIN', cn:'米兰利纳特机场', desc:'16:55 易捷U25072→柏林' },
-      { id:'d12-2', type:'airport', lat:52.366,lng:13.503, is:'BER T1', cn:'柏林勃兰登堡T1', desc:'18:35 抵达柏林' },
+      { id:'d13-1', type:'airport', lat:45.449,lng:9.278, is:'LIN', cn:'米兰利纳特机场', desc:'16:55 易捷U25072→柏林' },
+      { id:'d13-2', type:'airport', lat:52.366,lng:13.503, is:'BER T1', cn:'柏林勃兰登堡T1', desc:'18:35 抵达柏林' },
     ],
+  },
+  { day:'D14', date:'6/27', name:'柏林', nameCn:'柏林', route:'柏林市区自由活动',
+    points:[
+      { id:'d14-1', type:'attraction', lat:52.516,lng:13.378, is:'Brandenburger Tor', cn:'勃兰登堡门', desc:'柏林地标' },
+    ],
+    note:'柏林自由活动',
+  },
+  { day:'D15', date:'6/28', name:'柏林→返程', nameCn:'柏林最后一日', route:'柏林→返程',
+    points:[
+      { id:'d15-1', type:'attraction', lat:52.516,lng:13.378, is:'Brandenburger Tor', cn:'勃兰登堡门', desc:'自由活动·准备返程' },
+    ],
+    note:'返程航班待确认',
   },
 ];
 
