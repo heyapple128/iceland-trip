@@ -8,25 +8,17 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>冰岛之旅 · Iceland 2026</title>
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇮🇸</text></svg>">
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --bg: #0f0f1a;
-  --surface: #1a1a2e;
-  --surface2: #252540;
-  --accent: #ff6b6b;
-  --accent2: #4ecdc4;
-  --text: #f0f0f0;
-  --text2: #a0a0b0;
-  --gold: #ffd93d;
+  --bg: #0f0f1a; --surface: #1a1a2e; --surface2: #252540;
+  --accent: #ff6b6b; --accent2: #4ecdc4; --text: #f0f0f0; --text2: #a0a0b0; --gold: #ffd93d;
 }
 html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "SF Pro", "Helvetica Neue", sans-serif; background: var(--bg); color: var(--text); }
-#map { height: 100vh; width: 100vw; z-index: 1; }
+#map { height: 100vh; width: 100vw; }
 .leaflet-control-zoom { display: none; }
 
 /* Day tabs */
@@ -51,17 +43,17 @@ html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMa
 .bottom-sheet {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 1001;
   background: var(--surface); border-radius: 16px 16px 0 0;
-  max-height: 42vh; transition: transform 0.3s ease;
+  max-height: 42vh; transition: max-height 0.3s ease;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
 }
-.handle { width: 36px; height: 4px; background: #444; border-radius: 2px; margin: 8px auto; }
+.handle { width: 36px; height: 4px; background: #444; border-radius: 2px; margin: 8px auto; cursor: pointer; }
 .sheet-header {
   display: flex; justify-content: space-between; align-items: center;
   padding: 4px 16px 8px;
 }
 .sheet-header h2 { font-size: 16px; font-weight: 600; }
 .sheet-header .day-info { font-size: 12px; color: var(--text2); }
-.sheet-header .nav-btn { background: none; border: none; color: var(--accent); font-size: 22px; cursor: pointer; padding: 4px 8px; }
+.nav-btn { background: none; border: none; color: var(--accent); font-size: 22px; cursor: pointer; padding: 4px 8px; }
 .sheet-scroll { overflow-y: auto; padding: 0 16px 20px; max-height: calc(42vh - 60px); }
 .sheet-scroll::-webkit-scrollbar { width: 3px; }
 .sheet-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
@@ -72,41 +64,43 @@ html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMa
   padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .poi-item:last-child { border-bottom: none; }
-.poi-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.poi-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
 .poi-icon.attraction { background: rgba(255,107,107,0.2); }
 .poi-icon.camp { background: rgba(78,205,196,0.2); }
 .poi-icon.shop { background: rgba(255,217,61,0.2); }
-.poi-icon.food { background: rgba(255,217,61,0.2); }
 .poi-info { flex: 1; min-width: 0; }
 .poi-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-.poi-name .is-name { color: var(--accent2); font-size: 12px; cursor: pointer; }
-.poi-name .is-name:active { opacity: 0.6; }
-.poi-name .copy-badge { font-size: 10px; color: var(--accent2); }
+.is-name { color: var(--accent2); }
+.copy-btn { 
+  font-size: 11px; background: rgba(78,205,196,0.15); padding: 2px 8px; 
+  border-radius: 10px; cursor: pointer; color: var(--accent2); border: none;
+  white-space: nowrap;
+}
 .poi-cn { font-size: 13px; color: var(--text2); margin-top: 1px; }
 .poi-desc { font-size: 11px; color: #666; margin-top: 2px; }
 .poi-coord { font-size: 10px; color: #555; margin-top: 2px; }
-
-/* Camp info tag */
 .camp-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
 .camp-tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: rgba(78,205,196,0.15); color: var(--accent2); }
-
-/* Details section in sheet */
 .detail-section { margin-top: 8px; padding: 8px 0; }
 .detail-section .label { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
 .detail-section .value { font-size: 13px; line-height: 1.5; }
 
-/* Toast for copy */
+/* Toast */
 .toast {
-  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-  background: rgba(0,0,0,0.8); color: white; padding: 8px 16px;
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.85); color: white; padding: 10px 20px;
   border-radius: 20px; font-size: 13px; z-index: 9999;
-  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap;
 }
 .toast.show { opacity: 1; }
 
 /* Legend */
 .legend {
-  position: absolute; bottom: 45vh; right: 8px; z-index: 1000;
+  position: absolute; bottom: calc(42vh + 10px); right: 8px; z-index: 1000;
   background: rgba(26,26,46,0.85); backdrop-filter: blur(10px);
   border-radius: 10px; padding: 8px 10px;
   font-size: 11px; border: 1px solid rgba(255,255,255,0.08);
@@ -114,39 +108,47 @@ html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMa
 .legend-item { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-/* Full itinerary link */
-.itin-link {
-  text-align: center; padding: 12px 0 4px; font-size: 12px;
-  color: var(--accent2); cursor: pointer;
-}
+/* Itinerary link */
+.itin-link { text-align: center; padding: 12px 0 4px; font-size: 12px; color: var(--accent2); cursor: pointer; }
 
-/* Popup custom */
+/* Popup */
 .leaflet-popup-content-wrapper { background: var(--surface) !important; color: var(--text) !important; border-radius: 12px !important; }
 .leaflet-popup-tip { background: var(--surface) !important; }
 .leaflet-popup-content { margin: 10px 14px !important; font-size: 13px !important; font-family: -apple-system, sans-serif !important; }
-.popup-is { color: var(--accent2); font-weight: 500; cursor: pointer; }
+.popup-is { color: var(--accent2); font-weight: 500; }
+.popup-is .copy-trigger { cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.popup-is .copy-trigger:active { opacity: 0.6; }
 .popup-cn { color: var(--text2); font-size: 12px; margin-top: 2px; }
-.popup-coord { color: #555; font-size: 10px; margin-top: 4px; }
+.popup-meta { color: #555; font-size: 10px; margin-top: 4px; }
 
-/* View toggle buttons */
-.view-toggle {
-  position: absolute; top: 95px; right: 8px; z-index: 1000;
-  display: flex; flex-direction: column; gap: 4px;
+/* Full itinerary list */
+.day-block { margin-bottom: 14px; }
+.day-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
 }
-.view-toggle button {
-  width: 36px; height: 36px; border-radius: 8px;
-  background: rgba(26,26,46,0.85); backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: var(--text); font-size: 16px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
+.day-badge {
+  background: var(--accent); color: white; padding: 2px 10px;
+  border-radius: 12px; font-size: 11px; font-weight: 600;
 }
-.view-toggle button.active { background: var(--accent); border-color: var(--accent); }
+.day-name { font-size: 13px; font-weight: 500; }
+.day-date { font-size: 11px; color: var(--text2); }
+.point-row {
+  display: flex; align-items: flex-start; gap: 8px; padding: 4px 0 4px 4px;
+}
+.point-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px;
+}
+.point-dot.attraction { background: var(--accent); }
+.point-dot.camp { background: var(--accent2); }
+.point-dot.shop { background: var(--gold); }
+.point-text { font-size: 12px; }
+.point-text .is { }
+.point-text .cn { color: var(--text2); font-size: 11px; }
+.camp-note { font-size: 11px; color: var(--accent2); padding: 2px 0 0 14px; }
 
-/* Responsive */
 @media (min-width: 768px) {
   .day-tabs { top: 20px; left: 20px; right: 20px; justify-content: center; }
-  .bottom-sheet { max-width: 500px; left: 50%; right: auto; transform: translateX(-50%); width: 100%; border-radius: 16px 16px 16px 16px; bottom: 20px; }
-  .bottom-sheet.collapsed { transform: translateX(-50%) translateY(calc(100% - 50px)); }
+  .bottom-sheet { max-width: 500px; margin: 0 auto; }
 }
 </style>
 </head>
@@ -161,6 +163,8 @@ html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMa
 <div class="legend" id="legend">
   <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div>景点</div>
   <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div>营地</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffd93d"></div>购物/集合</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>机场</div>
 </div>
 
 <!-- Bottom Sheet -->
@@ -169,7 +173,7 @@ html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMa
   <div class="sheet-header">
     <button class="nav-btn" id="prevDay">◀</button>
     <div>
-      <h2 id="sheetTitle">行程总览</h2>
+      <h2 id="sheetTitle">🗺️ 全部行程</h2>
       <div class="day-info" id="sheetSubtitle">8天冰岛环岛之旅</div>
     </div>
     <button class="nav-btn" id="nextDay">▶</button>
@@ -183,147 +187,224 @@ html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMa
 <script>
 // ===================== DATA =====================
 const DAYS = [
-  {
-    day: 'D1', date: '6/14', name: '到达日', nameCn: '到达雷克雅未克',
-    route: 'Keflavík Airport → 超市采购 → Hvammsvík Hot Springs → Þingvellir Camping',
-    points: [
-      { id:'d1-1', type:'shop', lat:63.985, lng:-22.605, is:'Keflavík Airport', cn:'凯夫拉维克机场', desc:'取车' },
-      { id:'d1-2', type:'shop', lat:63.945, lng:-22.500, is:'Supermarket', cn:'超市采购', desc:'采购物资（Bonus / Krónan）' },
-      { id:'d1-3', type:'attraction', lat:64.300, lng:-21.950, is:'Hvammsvík', cn:'海湾温泉', desc:'特色地热海边温泉' },
-      { id:'d1-4', type:'camp', lat:64.255, lng:-21.125, is:'Þingvellir Camping', cn:'辛格维利尔营地', desc:'国家公园内，第二天直接开始黄金圈' },
-    ],
-    camp: { name:'Þingvellir Camping', note:'国家公园内，不需要做饭洗澡' }
+  { day:'D1', date:'6/14', name:'到达', nameCn:'到达雷克雅未克', route:'上海浦东(09:05)✈赫尔辛基✈凯夫拉维克(16:30)',
+    flight:{
+      segments:[
+        { airline:'吉祥航空 HO1607', from:'上海浦东T2 09:05', to:'赫尔辛基万塔 14:00', note:'约11h' },
+        { airline:'芬兰航空 AY993', from:'赫尔辛基万塔 15:50', to:'凯夫拉维克 16:30', note:'约2h40m' },
+      ],
+      booking:'PXWGNJ', ticket:'018-5002970864',
+      passengers:'Apple · Yang',
+      transfer:'赫尔辛基中转1h50m·行李直达·无需过境签'
+    },
+    points:[
+      { id:'d1-1', type:'airport', lat:31.144,lng:121.808, is:'PVG T2', cn:'上海浦东T2', desc:'09:05 吉祥航空 HO1607' },
+      { id:'d1-2', type:'shop', lat:64.050,lng:-21.960, is:'Bónus / Krónan', cn:'超市采购', desc:'补给物资' },
+      { id:'d1-3', type:'attraction', lat:64.302,lng:-21.952, is:'Hvammsvík', cn:'海湾温泉', desc:'海边地热温泉' },
+      { id:'d1-4', type:'camp', lat:64.255,lng:-21.125, is:'Þingvellir Camping', cn:'辛格维利尔营地', desc:'国家公园内' },
+    ], camp:{ name:'Þingvellir Camping', note:'国家公园内，第二天直接黄金圈' }
   },
-  {
-    day: 'D2', date: '6/15', name: '黄金圈', nameCn: '黄金圈',
-    route: 'Þingvellir → Geysir → Gullfoss → Hella',
-    points: [
-      { id:'d2-1', type:'attraction', lat:64.255, lng:-21.125, is:'Þingvellir', cn:'辛格维利尔国家公园', desc:'板块交界+古议会旧址' },
-      { id:'d2-2', type:'attraction', lat:64.310, lng:-20.300, is:'Geysir', cn:'盖歇尔间歇泉', desc:'地热间歇泉区' },
-      { id:'d2-3', type:'attraction', lat:64.326, lng:-20.121, is:'Gullfoss', cn:'黄金瀑布', desc:'冰岛最具代表性瀑布' },
-      { id:'d2-4', type:'camp', lat:63.860, lng:-20.410, is:'Hella Campsite', cn:'海拉营地', desc:'有淋浴、厨房' },
-    ],
-    camp: { name:'Hella Campsite', tags:['淋浴','厨房'], note:'' }
+  { day:'D2', date:'6/15', name:'黄金圈', nameCn:'黄金圈', route:'辛格维利尔 → Geysir → Gullfoss → Hella',
+    points:[
+      { id:'d2-1', type:'attraction', lat:64.255,lng:-21.125, is:'Þingvellir', cn:'辛格维利尔国家公园', desc:'板块交界+古议会' },
+      { id:'d2-2', type:'attraction', lat:64.310,lng:-20.300, is:'Geysir', cn:'盖歇尔间歇泉', desc:'地热间歇泉区' },
+      { id:'d2-3', type:'attraction', lat:64.326,lng:-20.121, is:'Gullfoss', cn:'黄金瀑布', desc:'冰岛最具代表性瀑布' },
+      { id:'d2-4', type:'camp', lat:63.860,lng:-20.410, is:'Hella Campsite', cn:'海拉营地', desc:'有淋浴、厨房' },
+    ], camp:{ name:'Hella Campsite', tags:['淋浴','厨房'] }
   },
-  {
-    day: 'D3', date: '6/16', name: '南岸', nameCn: '南岸',
-    route: 'Seljalandsfoss → Skógafoss → Dyrhólaey → Reynisfjara → Vík → Svínafell',
-    points: [
-      { id:'d3-1', type:'attraction', lat:63.615, lng:-19.988, is:'Seljalandsfoss', cn:'塞里雅兰瀑布', desc:'瀑布后可行走' },
-      { id:'d3-2', type:'attraction', lat:63.532, lng:-19.512, is:'Skógafoss', cn:'斯科加瀑布', desc:'可登顶' },
-      { id:'d3-3', type:'attraction', lat:63.399, lng:-19.129, is:'Dyrhólaey', cn:'迪霍拉里海岬', desc:'黑沙滩观景台' },
-      { id:'d3-4', type:'attraction', lat:63.405, lng:-19.072, is:'Reynisfjara', cn:'黑沙滩', desc:'玄武岩柱黑沙滩' },
-      { id:'d3-5', type:'attraction', lat:63.419, lng:-19.009, is:'Vík', cn:'维克镇', desc:'南岸小镇' },
-      { id:'d3-6', type:'camp', lat:63.745, lng:-17.420, is:'Svínafell Campground', cn:'斯维纳山营地', desc:'距离冰川徒步集合点约10分钟' },
-    ],
-    camp: { name:'Svínafell Campground', note:'距离冰川徒步集合点约10分钟' }
+  { day:'D3', date:'6/16', name:'南岸', nameCn:'南岸', route:'塞里雅兰 → 斯科加 → 黑沙滩 → Svínafell',
+    points:[
+      { id:'d3-1', type:'attraction', lat:63.615,lng:-19.988, is:'Seljalandsfoss', cn:'塞里雅兰瀑布', desc:'瀑布后可行走' },
+      { id:'d3-2', type:'attraction', lat:63.532,lng:-19.512, is:'Skógafoss', cn:'斯科加瀑布', desc:'可登顶俯瞰' },
+      { id:'d3-3', type:'attraction', lat:63.399,lng:-19.129, is:'Dyrhólaey', cn:'迪霍拉里海岬', desc:'黑沙滩观景台' },
+      { id:'d3-4', type:'attraction', lat:63.405,lng:-19.072, is:'Reynisfjara', cn:'黑沙滩', desc:'玄武岩柱+巨浪' },
+      { id:'d3-5', type:'attraction', lat:63.419,lng:-19.009, is:'Vík', cn:'维克镇', desc:'南岸小镇' },
+      { id:'d3-6', type:'camp', lat:63.745,lng:-17.420, is:'Svínafell Campground', cn:'斯维纳山营地', desc:'距冰川徒步集合点约10分钟' },
+    ], camp:{ name:'Svínafell Campground', note:'距冰川徒步集合点约10分钟' }
   },
-  {
-    day: 'D4', date: '6/17', name: '冰川日', nameCn: '冰川日',
-    route: 'Skaftafell → Jökulsárlón → Diamond Beach → Vestrahorn → Höfn',
-    points: [
-      { id:'d4-1', type:'attraction', lat:64.020, lng:-16.970, is:'Skaftafell', cn:'斯卡夫塔山', desc:'冰川徒步集合点' },
-      { id:'d4-2', type:'attraction', lat:64.078, lng:-16.231, is:'Jökulsárlón', cn:'冰河湖', desc:'冰山漂浮的冰川湖' },
-      { id:'d4-3', type:'attraction', lat:64.070, lng:-16.210, is:'Diamond Beach', cn:'钻石沙滩', desc:'冰石在黑沙滩上闪耀' },
-      { id:'d4-4', type:'attraction', lat:64.290, lng:-14.970, is:'Vestrahorn', cn:'蝙蝠山', desc:'东侧标志性山体' },
-      { id:'d4-5', type:'camp', lat:64.253, lng:-15.212, is:'Höfn Camping', cn:'赫本营地', desc:'有厨房、热水' },
-    ],
-    camp: { name:'Höfn Camping', tags:['厨房','热水'], note:'' }
+  { day:'D4', date:'6/17', name:'冰川日', nameCn:'冰川日', route:'斯卡夫塔山 → 冰河湖 → 钻石沙滩 → Höfn',
+    points:[
+      { id:'d4-1', type:'attraction', lat:64.020,lng:-16.970, is:'Skaftafell', cn:'斯卡夫塔山', desc:'冰川徒步集合点' },
+      { id:'d4-2', type:'attraction', lat:64.078,lng:-16.231, is:'Jökulsárlón', cn:'冰河湖', desc:'冰山冰川湖' },
+      { id:'d4-3', type:'attraction', lat:64.070,lng:-16.210, is:'Diamond Beach', cn:'钻石沙滩', desc:'冰石在黑沙滩闪耀' },
+      { id:'d4-4', type:'attraction', lat:64.290,lng:-14.970, is:'Vestrahorn', cn:'蝙蝠山', desc:'标志性山体' },
+      { id:'d4-5', type:'camp', lat:64.253,lng:-15.212, is:'Höfn Camping', cn:'赫本营地', desc:'有厨房·热水' },
+    ], camp:{ name:'Höfn Camping', tags:['厨房','热水'] }
   },
-  {
-    day: 'D5', date: '6/18', name: '东部峡湾', nameCn: '东部峡湾',
-    route: 'Djúpivogur → Fáskrúðsfjörður → Seyðisfjörður → Egilsstaðir',
-    points: [
-      { id:'d5-1', type:'attraction', lat:64.740, lng:-14.240, is:'Djúpivogur', cn:'久皮沃古尔', desc:'东峡湾小渔村' },
-      { id:'d5-2', type:'attraction', lat:64.930, lng:-14.010, is:'Fáskrúðsfjörður', cn:'法斯克鲁兹峡湾', desc:'法国文化影响的小镇' },
-      { id:'d5-3', type:'attraction', lat:65.260, lng:-13.910, is:'Seyðisfjörður', cn:'塞济斯菲厄泽', desc:'彩色小镇' },
-      { id:'d5-4', type:'attraction', lat:65.260, lng:-13.900, is:'Seyðisfjarðarkirkja', cn:'蓝教堂', desc:'标志性蓝色教堂' },
-      { id:'d5-5', type:'camp', lat:65.260, lng:-13.800, is:'Egilsstaðir Campsite', cn:'埃基尔斯塔迪尔营地', desc:'设施非常好' },
-    ],
-    camp: { name:'Egilsstaðir Campsite', note:'设施非常好' }
+  { day:'D5', date:'6/18', name:'东部峡湾', nameCn:'东部峡湾', route:'东峡湾小镇 → 蓝教堂 → Egilsstaðir',
+    points:[
+      { id:'d5-1', type:'attraction', lat:64.740,lng:-14.240, is:'Djúpivogur', cn:'久皮沃古尔', desc:'东峡湾小渔村' },
+      { id:'d5-2', type:'attraction', lat:64.930,lng:-14.010, is:'Fáskrúðsfjörður', cn:'法斯克鲁兹峡湾', desc:'法国文化小镇' },
+      { id:'d5-3', type:'attraction', lat:65.260,lng:-13.910, is:'Seyðisfjörður', cn:'塞济斯菲厄泽', desc:'彩色小镇' },
+      { id:'d5-4', type:'attraction', lat:65.260,lng:-13.900, is:'Seyðisfjarðarkirkja', cn:'蓝教堂', desc:'标志性蓝色教堂' },
+      { id:'d5-5', type:'camp', lat:65.260,lng:-13.800, is:'Egilsstaðir Campsite', cn:'埃基尔斯塔迪尔营地', desc:'设施非常好' },
+    ], camp:{ name:'Egilsstaðir Campsite', note:'设施非常好' }
   },
-  {
-    day: 'D6', date: '6/19', name: '北部', nameCn: '北部（米湖）',
-    route: 'Húsavík → Hverir → Grjótagjá → Dimmuborgir → Hverfjall → Hamrar',
-    points: [
-      { id:'d6-1', type:'attraction', lat:66.052, lng:-17.344, is:'Húsavík', cn:'胡萨维克', desc:'观鲸小镇' },
-      { id:'d6-2', type:'attraction', lat:65.635, lng:-16.830, is:'Hverir', cn:'地热泥浆区', desc:'硫磺地热区' },
-      { id:'d6-3', type:'attraction', lat:65.620, lng:-16.880, is:'Grjótagjá', cn:'熔岩洞', desc:'蓝色温泉洞穴（Game of Thrones取景）' },
-      { id:'d6-4', type:'attraction', lat:65.590, lng:-16.910, is:'Dimmuborgir', cn:'熔岩城堡', desc:'奇特的熔岩地貌' },
-      { id:'d6-5', type:'attraction', lat:65.600, lng:-16.870, is:'Hverfjall', cn:'火山口', desc:'（天气好再去）' },
-      { id:'d6-6', type:'camp', lat:65.620, lng:-16.980, is:'Hamrar Camping', cn:'哈姆拉营地（米湖）', desc:'📍阿克雷里方向' },
-    ],
-    camp: { name:'Hamrar Camping', note:'📍 阿克雷里' }
+  { day:'D6', date:'6/19', name:'北部', nameCn:'北部（米湖）', route:'胡萨维克 → Hverir → Dimmuborgir → Hamrar',
+    points:[
+      { id:'d6-1', type:'attraction', lat:66.052,lng:-17.344, is:'Húsavík', cn:'胡萨维克', desc:'观鲸小镇' },
+      { id:'d6-2', type:'attraction', lat:65.635,lng:-16.830, is:'Hverir', cn:'地热泥浆区', desc:'硫磺地热' },
+      { id:'d6-3', type:'attraction', lat:65.620,lng:-16.880, is:'Grjótagjá', cn:'熔岩洞（权游取景）', desc:'蓝色温泉洞穴' },
+      { id:'d6-4', type:'attraction', lat:65.590,lng:-16.910, is:'Dimmuborgir', cn:'熔岩城堡', desc:'奇特熔岩地貌' },
+      { id:'d6-5', type:'attraction', lat:65.600,lng:-16.870, is:'Hverfjall', cn:'火山口', desc:'天气好再去' },
+      { id:'d6-6', type:'camp', lat:65.620,lng:-16.980, is:'Hamrar Camping', cn:'哈姆拉营地（米湖）', desc:'近阿克雷里' },
+    ], camp:{ name:'Hamrar Camping', note:'📍 阿克雷里方向' }
   },
-  {
-    day: 'D7', date: '6/20', name: '北部→斯奈山', nameCn: '北部 → 斯奈山',
-    route: 'Akureyri → Glaumbær → Kirkjufell → Grundarfjörður',
-    points: [
-      { id:'d7-1', type:'attraction', lat:65.684, lng:-18.088, is:'Akureyri', cn:'阿克雷里', desc:'北部首府·爱心红灯' },
-      { id:'d7-2', type:'attraction', lat:65.684, lng:-18.100, is:'Akureyrarkirkja', cn:'阿克雷里教堂', desc:'地标教堂' },
-      { id:'d7-3', type:'attraction', lat:65.825, lng:-19.500, is:'Glaumbær', cn:'草皮屋博物馆', desc:'传统草皮屋' },
-      { id:'d7-4', type:'attraction', lat:64.925, lng:-23.310, is:'Kirkjufell', cn:'教会山', desc:'冰岛最上镜的山' },
-      { id:'d7-5', type:'camp', lat:64.930, lng:-23.280, is:'Grundarfjörður Campsite', cn:'格伦达菲厄泽营地', desc:'就在教会山旁边' },
-    ],
-    camp: { name:'Grundarfjörður Campsite', note:'就在教会山旁边' }
+  { day:'D7', date:'6/20', name:'北部→斯奈山', nameCn:'北部→斯奈山', route:'阿克雷里 → 教会山 → Grundarfjörður',
+    points:[
+      { id:'d7-1', type:'attraction', lat:65.684,lng:-18.088, is:'Akureyri', cn:'阿克雷里', desc:'北部首府·爱心红灯' },
+      { id:'d7-2', type:'attraction', lat:65.684,lng:-18.100, is:'Akureyrarkirkja', cn:'阿克雷里教堂', desc:'地标教堂' },
+      { id:'d7-3', type:'attraction', lat:64.925,lng:-23.310, is:'Kirkjufell', cn:'教会山', desc:'冰岛最上镜的山' },
+      { id:'d7-4', type:'camp', lat:64.930,lng:-23.280, is:'Grundarfjörður Campsite', cn:'格伦达菲厄泽营地', desc:'就在教会山旁边' },
+    ], camp:{ name:'Grundarfjörður Campsite', note:'就在教会山旁边' }
   },
-  {
-    day: 'D8', date: '6/21', name: '斯奈山半岛', nameCn: '斯奈山半岛 → 机场',
-    route: 'Kirkjufellsfoss → Arnarstapi → Búðakirkja → Búðir → KEF',
-    points: [
-      { id:'d8-1', type:'attraction', lat:64.930, lng:-23.310, is:'Kirkjufellsfoss', cn:'教会山瀑布', desc:'教会山前的瀑布' },
-      { id:'d8-2', type:'attraction', lat:64.768, lng:-23.620, is:'Arnarstapi', cn:'阿尔纳斯塔皮', desc:'海边小镇+玄武岩' },
-      { id:'d8-3', type:'attraction', lat:64.828, lng:-23.390, is:'Búðakirkja', cn:'黑教堂', desc:'标志性黑色教堂' },
-      { id:'d8-4', type:'attraction', lat:64.831, lng:-23.378, is:'Búðir', cn:'红房子', desc:'历史红色旅店' },
-      { id:'d8-5', type:'shop', lat:63.985, lng:-22.605, is:'Keflavík Airport', cn:'凯夫拉维克机场', desc:'17:00抵达 · 18:00还车' },
+  { day:'D8', date:'6/21', name:'斯奈山', nameCn:'斯奈山→机场', route:'教会山瀑布 → 黑教堂 → 蓝教堂 → 机场还车',
+    points:[
+      { id:'d8-1', type:'attraction', lat:64.930,lng:-23.310, is:'Kirkjufellsfoss', cn:'教会山瀑布', desc:'教会山前的瀑布' },
+      { id:'d8-2', type:'attraction', lat:64.768,lng:-23.620, is:'Arnarstapi', cn:'阿尔纳斯塔皮', desc:'海边小镇·玄武岩' },
+      { id:'d8-3', type:'attraction', lat:64.828,lng:-23.390, is:'Búðakirkja', cn:'黑教堂', desc:'标志性黑色教堂' },
+      { id:'d8-4', type:'attraction', lat:64.831,lng:-23.378, is:'Búðir', cn:'红房子', desc:'历史红色旅店' },
+      { id:'d8-5', type:'airport', lat:63.985,lng:-22.605, is:'Keflavík Airport', cn:'凯夫拉维克机场', desc:'17:00到·18:00还车' },
     ],
-    schedule: [
-      { time:'08:00', action:'出发' },
-      { time:'14:30', action:'离开斯奈山' },
-      { time:'17:00', action:'抵达机场' },
-      { time:'18:00', action:'还车' },
+    schedule:[{ time:'08:00', action:'出发' },{ time:'14:30', action:'离开斯奈山' },{ time:'17:00', action:'抵达机场' },{ time:'18:00', action:'还车' }],
+    note:'这个时间非常安全',
+    camp:{ name:'Candlewood Suites', tags:['🏨 酒店','雷克雅未克'], note:'还车后入住' }
+  },
+  { day:'D9', date:'6/22', name:'雷市休息', nameCn:'雷克雅未克市区', route:'哈尔格林姆教堂 → 哈帕 → 珍珠楼 → 老港口',
+    points:[
+      { id:'d9-1', type:'attraction', lat:64.142,lng:-21.927, is:'Hallgrímskirkja', cn:'哈尔格林姆教堂', desc:'雷市地标教堂' },
+      { id:'d9-2', type:'attraction', lat:64.150,lng:-21.933, is:'Harpa', cn:'哈帕音乐厅', desc:'玻璃幕墙建筑' },
+      { id:'d9-3', type:'attraction', lat:64.130,lng:-21.919, is:'Perlan', cn:'珍珠楼', desc:'穹顶观景台' },
+      { id:'d9-4', type:'attraction', lat:64.152,lng:-21.945, is:'Old Harbour', cn:'老港口', desc:'海边散步·餐厅' },
     ],
-    note: '这个时间非常安全'
+    camp:{ name:'Candlewood Suites', tags:['🏨 酒店','雷克雅未克'], note:'市区休息日' }
+  },
+  { day:'D10', date:'6/23', name:'高地团', nameCn:'Super Jeep 高地', route:'Bus Station 8(08:00) 🚙 兰德曼纳劳卡→彩虹山→火山口湖',
+    points:[
+      { id:'d10-0', type:'shop', lat:64.139,lng:-21.931, is:'Bus Station 8 (BSÍ)', cn:'8号巴士站（集合点）', desc:'⏰ 08:00集合 · 就在哈尔格林姆教堂旁边步行3分钟' },
+      { id:'d10-1', type:'attraction', lat:63.993,lng:-19.061, is:'Landmannalaugar', cn:'兰德曼纳劳卡', desc:'高地起点·彩色流纹岩' },
+      { id:'d10-2', type:'attraction', lat:63.976,lng:-19.064, is:'Brennisteinsalda', cn:'彩虹山', desc:'多彩山坡' },
+      { id:'d10-3', type:'attraction', lat:63.930,lng:-19.320, is:'Ljótipollur', cn:'火山口湖', desc:'红色火山口+蓝色湖' },
+      { id:'d10-4', type:'attraction', lat:63.983,lng:-19.667, is:'Hekla', cn:'赫克拉火山', desc:'活火山·远观' },
+    ],
+    schedule:[{ time:'08:00', action:'Bus Station 8 集合出发' }],
+    note:'BSÍ就在哈尔格林姆教堂旁边，步行3分钟 ⚠️ 别迟到！',
+    camp:{ name:'Candlewood Suites', tags:['🏨 酒店','雷克雅未克'], note:'高地团返回后入住' }
+  },
+  { day:'D11', date:'6/24', name:'飞米兰', nameCn:'飞往米兰', route:'凯夫拉维克(14:45)✈米兰(21:00)',
+    flight:{
+      segments:[
+        { airline:'易捷航空 U23976', from:'雷克雅未克KEF 14:45', to:'米兰马尔彭萨T2 21:00', note:'4h15m' },
+      ],
+      booking:'（携程订）',
+      passengers:'Apple · Yang',
+    },
+    points:[
+      { id:'d11-1', type:'airport', lat:63.985,lng:-22.605, is:'Keflavík Airport', cn:'凯夫拉维克机场', desc:'14:45 易捷U23976→米兰' },
+      { id:'d11-2', type:'airport', lat:45.630,lng:8.723, is:'MXP T2', cn:'米兰马尔彭萨T2', desc:'21:00 抵达米兰' },
+    ],
+    camp:{ name:'Candlewood Suites', tags:['🏨 酒店','雷克雅未克'], note:'上午退房·行李寄存' }
+  },
+  { day:'D12', date:'6/26', name:'飞柏林', nameCn:'米兰→柏林', route:'米兰利纳特(16:55)✈柏林(18:35)',
+    flight:{
+      segments:[
+        { airline:'易捷航空 U25072', from:'米兰利纳特 16:55', to:'柏林勃兰登堡T1 18:35', note:'1h40m' },
+      ],
+      booking:'（携程订）',
+      passengers:'Apple · Yang',
+    },
+    points:[
+      { id:'d12-1', type:'airport', lat:45.449,lng:9.278, is:'LIN', cn:'米兰利纳特机场', desc:'16:55 易捷U25072→柏林' },
+      { id:'d12-2', type:'airport', lat:52.366,lng:13.503, is:'BER T1', cn:'柏林勃兰登堡T1', desc:'18:35 抵达柏林' },
+    ],
   },
 ];
 
 // ===================== MAP =====================
-const map = L.map('map', {
-  center: [64.8, -18.5],
-  zoom: 6,
-  zoomControl: false,
-  attributionControl: false,
-});
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 18,
-}).addTo(map);
-
-L.control.attribution({ position: 'bottomleft', prefix: false }).addTo(map);
+const map = L.map('map', { center:[64.8,-18.5], zoom:6, zoomControl:false, attributionControl:false });
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:18 }).addTo(map);
+L.control.attribution({ position:'bottomleft', prefix:false }).addTo(map);
 
 // ===================== MARKERS =====================
 let allMarkers = [];
-let markerGroup = L.layerGroup().addTo(map);
-let activeDay = 0;
+const markerGroup = L.layerGroup().addTo(map);
+const routeGroup = L.layerGroup().addTo(map);
+let activeDay = -1;
+
+// Haversine distance (km)
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// Road difficulty & driving time metadata
+// key = from-point id, road: 'hard'(山路/窄路), 'easy'(平缓短途), undefined(普通)
+const ROAD_META = {
+  'd1-3': { min:35, road:'hard' },   // Hvammsvík→Þingvellir 部分窄路/碎石
+  'd2-2': { min:8, road:'easy' },     // Geysir→Gullfoss 短途平缓
+  'd3-2': { min:18, road:'easy' },    // Skógafoss→Dyrhólaey
+  'd3-3': { min:4, road:'easy' },     // Dyrhólaey→Reynisfjara
+  'd3-4': { min:4, road:'easy' },     // Reynisfjara→Vík
+  'd4-2': { min:2, road:'easy' },     // Jökulsárlón→Diamond Beach 同一区域
+  'd4-3': { min:35, road:'hard' },    // Diamond Beach→Vestrahorn 部分碎石路
+  'd5-2': { min:40, road:'hard' },    // Fáskrúðsfjörður→Seyðisfjörður 山路93号
+  'd6-1': { min:3, road:'easy' },     // Hverir→Grjótagjá 米湖区域
+  'd6-2': { min:4, road:'easy' },     // Grjótagjá→Dimmuborgir
+  'd6-3': { min:3, road:'easy' },     // Dimmuborgir→Hverfjall
+  'd7-2': { min:220, road:'hard' },   // Akureyrarkirkja→Kirkjufell ~300km Route1+54 部分窄路/长距离
+  'd7-3': { min:1, road:'easy' },     // Kirkjufell→营地 步行
+  'd8-2': { min:12, road:'easy' },    // Arnarstapi→Búðakirkja
+  'd8-3': { min:2, road:'easy' },     // Búðakirkja→Búðir
+  'd10-0': { min:120, road:'hard' },  // BSÍ→Landmannalaugar F-road高地
+  'd10-1': { min:15, road:'hard' },   // Landmannalaugar→Brennisteinsalda
+  'd10-2': { min:30, road:'hard' },   // Brennisteinsalda→Ljótipollur
+  'd10-3': { min:25, road:'hard' },   // Ljótipollur→Hekla
+};
+
+// Pre-calculate segment data (km, min, road) for each day
+DAYS.forEach(day => {
+  day.segments = [];
+  day.totalKm = 0;
+  day.totalMin = 0;
+  for (let i = 0; i < day.points.length - 1; i++) {
+    const a = day.points[i], b = day.points[i+1];
+    const km = haversineKm(a.lat, a.lng, b.lat, b.lng);
+    const meta = ROAD_META[a.id] || {};
+    // Skip flight segments (airport→airport or >1000km)
+    const isFlight = km > 1000 || (a.type === 'airport' && b.type === 'airport');
+    let min = meta.min;
+    if (!min && !isFlight) min = Math.max(5, Math.round(km / 65 * 60)); // avg 65km/h default
+    const seg = { km, min, road: meta.road || 'normal', isFlight };
+    day.segments.push(seg);
+    if (!isFlight) { day.totalKm += km; day.totalMin += (min || 0); }
+  }
+});
 
 const ICONS = {
-  attraction: L.divIcon({
-    html: '<div style="background:#ff6b6b;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.3);">📍</div>',
-    iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -16]
-  }),
-  camp: L.divIcon({
-    html: '<div style="background:#4ecdc4;color:white;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.3);">🏕️</div>',
-    iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -16]
-  }),
-  shop: L.divIcon({
-    html: '<div style="background:#ffd93d;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.3);">🛒</div>',
-    iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -16]
-  }),
-  food: L.divIcon({
-    html: '<div style="background:#ffd93d;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.3);">🍽️</div>',
-    iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -16]
-  })
+  attraction: L.divIcon({ html:'<div style="background:#ff6b6b;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.3);">📍</div>', iconSize:[28,28], iconAnchor:[14,14], popupAnchor:[0,-16] }),
+  camp: L.divIcon({ html:'<div style="background:#4ecdc4;color:white;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.3);">🏕️</div>', iconSize:[28,28], iconAnchor:[14,14], popupAnchor:[0,-16] }),
+  shop: L.divIcon({ html:'<div style="background:#ffd93d;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.3);">🛒</div>', iconSize:[28,28], iconAnchor:[14,14], popupAnchor:[0,-16] }),
+  airport: L.divIcon({ html:'<div style="background:#a78bfa;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.3);">✈️</div>', iconSize:[28,28], iconAnchor:[14,14], popupAnchor:[0,-16] }),
 };
+
+function copyText(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 已复制: ' + text));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); showToast('📋 已复制: ' + text);
+  }
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
 
 function buildMarkers() {
   allMarkers = [];
@@ -332,191 +413,170 @@ function buildMarkers() {
       const icon = ICONS[p.type] || ICONS.attraction;
       const marker = L.marker([p.lat, p.lng], { icon }).bindPopup(`
         <div>
-          <div class="popup-is" onclick="copyText('${p.is}')">${p.is} 📋</div>
+          <div class="popup-is">
+            <span class="copy-trigger" onclick="copyText('${p.is}')">${p.is} 📋</span>
+          </div>
           <div class="popup-cn">${p.cn}</div>
-          <div class="popup-coord">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)} 📋</div>
-          ${p.desc ? `<div style="color:#999;font-size:11px;margin-top:4px">${p.desc}</div>` : ''}
-          <div style="font-size:10px;color:#555;margin-top:6px">${day.day} · ${day.nameCn}</div>
+          ${p.desc ? `<div class="popup-meta" style="color:#999">${p.desc}</div>` : ''}
+          <div class="popup-meta" style="margin-top:4px">${day.day} · ${day.nameCn}</div>
         </div>
       `);
       marker._dayIndex = di;
-      marker._pointId = p.id;
       allMarkers.push(marker);
     });
   });
 }
 
 function showDay(dayIndex) {
+  if (dayIndex < 0 || dayIndex >= DAYS.length) return;
   activeDay = dayIndex;
   const day = DAYS[dayIndex];
-  
-  // Clear markers
   markerGroup.clearLayers();
+  routeGroup.clearLayers();
   
-  // Add markers for this day
-  const dayMarkers = allMarkers.filter(m => m._dayIndex === dayIndex);
-  dayMarkers.forEach(m => markerGroup.addLayer(m));
+  // Draw route line connecting points in order
+  const coords = day.points.map(p => [p.lat, p.lng]);
+  const routeLine = L.polyline(coords, {
+    color: '#ff6b6b', weight: 4, opacity: 0.6, dashArray: '10, 8'
+  }).addTo(routeGroup);
   
-  // Fit bounds
-  if (dayMarkers.length > 0) {
-    const group = L.featureGroup(dayMarkers);
-    map.fitBounds(group.getBounds().pad(0.15));
-  }
-  
-  // Update tabs
-  document.querySelectorAll('.day-tab').forEach((tab, i) => {
-    tab.classList.toggle('active', i === dayIndex);
-  });
-  
-  // Scroll tab into view
-  const activeTab = document.querySelector('.day-tab.active');
-  if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-  
-  // Update sheet
+  const dm = allMarkers.filter(m => m._dayIndex === dayIndex);
+  dm.forEach(m => markerGroup.addLayer(m));
+  if (dm.length) map.fitBounds(L.featureGroup(dm).getBounds().pad(0.15));
+  document.querySelectorAll('.day-tab').forEach((tab, i) => tab.classList.toggle('active', i === dayIndex + 1));
+  const at = document.querySelector('.day-tab.active');
+  if (at) at.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
   renderSheet(day, dayIndex);
+}
+
+function showAllDays() {
+  activeDay = -1;
+  markerGroup.clearLayers();
+  routeGroup.clearLayers();
+  allMarkers.forEach(m => markerGroup.addLayer(m));
+  map.fitBounds(L.featureGroup(allMarkers).getBounds().pad(0.1));
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.day-tab:first-child').classList.add('active');
+  document.getElementById('sheetTitle').textContent = '🗺️ 全部行程';
+  document.getElementById('sheetSubtitle').textContent = '12天冰岛+欧洲之旅 · 点击查看每日详情';
+  let html = '';
+  DAYS.forEach((day, idx) => {
+    html += `<div class="day-block">
+      <div class="day-header">
+        <span class="day-badge">${day.day}</span>
+        <span class="day-name">${day.nameCn}</span>
+        <span class="day-date">${day.date}</span>
+      </div>`;
+    day.points.forEach(p => {
+      html += `<div class="point-row">
+        <div class="point-dot ${p.type}"></div>
+        <div class="point-text">
+          <span class="is">${p.is}</span>
+          ${p.desc ? `<span style="color:#666;font-size:10px"> · ${p.desc}</span>` : ''}
+          <div class="cn">${p.cn}</div>
+        </div>
+      </div>`;
+    });
+    if (day.camp) {
+      html += `<div class="camp-note">🏕️ ${day.camp.name}${day.camp.note ? ' · ' + day.camp.note : ''}</div>`;
+    }
+    html += `</div>`;
+  });
+  document.getElementById('sheetContent').innerHTML = html;
 }
 
 function renderSheet(day, idx) {
   document.getElementById('sheetTitle').textContent = `${day.day} · ${day.nameCn}`;
-  document.getElementById('sheetSubtitle').textContent = day.route || '';
-  
+  const kmText = day.totalKm ? ` · 🛣️ ${Math.round(day.totalKm)} km` : '';
+  const timeText = day.totalMin ? ` · 🕐 约 ${day.totalMin} 分钟` : '';
+  document.getElementById('sheetSubtitle').textContent = (day.route || '') + kmText + timeText;
   let html = '';
   
-  // Points
-  day.points.forEach(p => {
-    const icons = { attraction:'📍', camp:'🏕️', shop:'🛒', food:'🍽️' };
+  // Flight info
+  if (day.flight) {
+    html += `<div class="detail-section" style="border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:10px;margin-bottom:4px">
+      <div class="label">✈️ 航班信息</div>`;
+    day.flight.segments.forEach(s => {
+      html += `<div class="value" style="display:flex;align-items:center;gap:8px;margin:4px 0;font-size:12px">
+        <span style="color:var(--gold);font-weight:500">${s.airline}</span>
+        <span style="color:var(--text2)">${s.from} → ${s.to}</span>
+        <span style="color:#666;font-size:10px">${s.note}</span>
+      </div>`;
+    });
+    html += `<div style="font-size:11px;color:var(--text2);margin-top:4px">
+      预订码: ${day.flight.booking} · ${day.flight.passengers}<br>
+      <span style="color:var(--accent2)">${day.flight.transfer}</span>
+    </div></div>`;
+  }
+  
+  day.points.forEach((p, pi) => {
+    if (p.type === 'camp') return;
+    const emoji = { attraction:'📍', camp:'🏕️', shop:'🛒', food:'🍽️', airport:'✈️' };
     html += `<div class="poi-item">
-      <div class="poi-icon ${p.type}">${icons[p.type] || '📍'}</div>
+      <div class="poi-icon ${p.type}">${emoji[p.type] || '📍'}</div>
       <div class="poi-info">
         <div class="poi-name">
-          <span onclick="copyText('${p.is}')" style="cursor:pointer">${p.is}</span>
-          <span class="copy-badge">📋</span>
+          <span class="is-name">${p.is}</span>
+          <button class="copy-btn" onclick="copyText('${p.is}')">📋 复制</button>
         </div>
         <div class="poi-cn">${p.cn}</div>
         ${p.desc ? `<div class="poi-desc">${p.desc}</div>` : ''}
-        <div class="poi-coord">${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}</div>
+        ${pi < day.segments.length && !day.segments[pi].isFlight ? (() => {
+          const seg = day.segments[pi];
+          const roadTag = seg.road === 'hard' ? '<span style="background:rgba(255,107,107,0.2);color:#ff6b6b;padding:1px 6px;border-radius:8px;font-size:10px;margin-left:4px">🔴 有难度</span>' :
+                         seg.road === 'easy' ? '<span style="background:rgba(78,205,196,0.2);color:#4ecdc4;padding:1px 6px;border-radius:8px;font-size:10px;margin-left:4px">🟢 简易</span>' : '';
+          return `<div class="poi-desc" style="color:var(--accent);font-size:10px">→ 约 ${seg.min} 分钟 · ${Math.round(seg.km)} km${roadTag}</div>`;
+        })() : ''}
       </div>
     </div>`;
   });
-  
-  // Camp section
   if (day.camp) {
+    // Find camp coordinates from points array
+    const campPt = day.points.find(p => p.type === 'camp');
+    let toNextHtml = '';
+    if (campPt && idx < DAYS.length - 1) {
+      const nextDay = DAYS[idx + 1];
+      const nextFirst = nextDay.points.find(p => p.type !== 'camp') || nextDay.points[0];
+      if (nextFirst) {
+        const dist = haversineKm(campPt.lat, campPt.lng, nextFirst.lat, nextFirst.lng);
+        toNextHtml = `<div class="poi-desc" style="color:var(--accent2);font-size:11px;margin-top:4px">
+          ➡️ 明天第一站 · ${nextFirst.cn} 约 ${Math.round(dist)} km</div>`;
+      }
+    }
     html += `<div class="poi-item" style="border-top:1px solid rgba(255,255,255,0.1);margin-top:4px;padding-top:12px">
       <div class="poi-icon camp">🏕️</div>
       <div class="poi-info">
         <div class="poi-name">${day.camp.name}</div>
-        ${day.camp.tags ? `<div class="camp-tags">${day.camp.tags.map(t => `<span class="camp-tag">${t}</span>`).join('')}</div>` : ''}
+        ${day.camp.tags ? `<div class="camp-tags">${day.camp.tags.map(t => `<span class="camp-tag">✓ ${t}</span>`).join('')}</div>` : ''}
         ${day.camp.note ? `<div class="poi-desc">${day.camp.note}</div>` : ''}
+        ${toNextHtml}
       </div>
     </div>`;
   }
-  
-  // Schedule (D8)
   if (day.schedule) {
-    html += `<div class="detail-section">
-      <div class="label">⏰ 时间控制</div>`;
+    html += `<div class="detail-section"><div class="label">⏰ 时间控制</div>`;
     day.schedule.forEach(s => {
       html += `<div class="value" style="display:flex;gap:12px;margin:3px 0"><span style="color:var(--gold);font-weight:500">${s.time}</span><span>${s.action}</span></div>`;
     });
     html += `</div>`;
     if (day.note) html += `<div style="font-size:12px;color:var(--accent2);margin-top:6px">✓ ${day.note}</div>`;
   }
-  
-  // Itinerary view link
   html += `<div class="itin-link" onclick="showAllDays()">📋 查看全部行程</div>`;
-  
   document.getElementById('sheetContent').innerHTML = html;
 }
 
-function showAllDays() {
-  document.getElementById('sheetTitle').textContent = '🗺️ 全部行程';
-  document.getElementById('sheetSubtitle').textContent = '8天冰岛环岛之旅';
-  
-  // Show all markers
-  markerGroup.clearLayers();
-  allMarkers.forEach(m => markerGroup.addLayer(m));
-  map.fitBounds(L.featureGroup(allMarkers).getBounds().pad(0.1));
-  
-  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-  
-  // Build full itinerary
-  let html = '';
-  DAYS.forEach((day, idx) => {
-    html += `<div style="margin-bottom:16px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <span style="background:var(--accent);color:white;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600">${day.day}</span>
-        <span style="font-size:13px;font-weight:500">${day.nameCn}</span>
-        <span style="font-size:11px;color:var(--text2)">${day.date}</span>
-      </div>`;
-    day.points.forEach(p => {
-      html += `<div class="poi-item" style="padding:6px 0">
-        <div style="width:4px;height:4px;border-radius:50%;background:${p.type === 'camp' ? 'var(--accent2)' : 'var(--accent)'};margin:6px 8px 0 0;flex-shrink:0"></div>
-        <div class="poi-info">
-          <div class="poi-name"><span style="font-size:12px">${p.is}</span></div>
-          <div class="poi-cn" style="font-size:11px">${p.cn}</div>
-        </div>
-      </div>`;
-    });
-    if (day.camp) {
-      html += `<div style="font-size:11px;color:var(--accent2);padding:4px 0 0 12px">🏕️ ${day.camp.name}</div>`;
-    }
-    html += `</div>`;
-  });
-  
-  document.getElementById('sheetContent').innerHTML = html;
-}
-
-// ===================== COPY =====================
-function copyText(text) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => showToast('已复制: ' + text));
-  } else {
-    // Fallback
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showToast('已复制: ' + text);
-  }
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-// ===================== UI INIT =====================
+// ===================== INIT =====================
 function init() {
-  // Day tabs
   const tabs = document.getElementById('dayTabs');
-  DAYS.forEach((day, i) => {
-    const tab = document.createElement('div');
-    tab.className = 'day-tab' + (i === 0 ? ' active' : '');
-    let label = day.day;
-    if (i === 0) label = '🗺️ 全部';
-    tab.innerHTML = `${label} <span class="date">${day.date}</span>`;
-    tab.addEventListener('click', () => {
-      if (i === 0) showAllDays();
-      else showDay(i - 1);
-    });
-    // First tab is "All"
-    if (i === 0) tab.dataset.all = 'true';
-    tabs.appendChild(tab);
-  });
   
-  // Actually, let's redo: first tab = All, rest = D1-D8
-  tabs.innerHTML = '';
-  
+  // "全部" tab
   const allTab = document.createElement('div');
-  allTab.className = 'day-tab';
-  allTab.innerHTML = '🗺️ 全部 <span class="date">8天</span>';
+  allTab.className = 'day-tab active';
+  allTab.innerHTML = '🗺️ 全部 <span class="date">12天</span>';
   allTab.addEventListener('click', showAllDays);
   tabs.appendChild(allTab);
   
+  // Day tabs D1-D8
   DAYS.forEach((day, i) => {
     const tab = document.createElement('div');
     tab.className = 'day-tab';
@@ -525,7 +585,6 @@ function init() {
     tabs.appendChild(tab);
   });
   
-  // Build markers
   buildMarkers();
   showAllDays();
   
@@ -534,19 +593,17 @@ function init() {
     if (activeDay > 0) showDay(activeDay - 1);
   });
   document.getElementById('nextDay').addEventListener('click', () => {
-    if (activeDay < DAYS.length - 1) showDay(activeDay + 1);
+    if (activeDay >= 0 && activeDay < DAYS.length - 1) showDay(activeDay + 1);
   });
   
-  // Sheet handle - toggle expand
-  let sheetExpanded = false;
+  // Sheet expand
+  let expanded = false;
   document.querySelector('.handle').addEventListener('click', () => {
-    sheetExpanded = !sheetExpanded;
-    document.querySelector('.bottom-sheet').style.maxHeight = sheetExpanded ? '80vh' : '42vh';
-    document.querySelector('.sheet-scroll').style.maxHeight = sheetExpanded ? 'calc(80vh - 60px)' : 'calc(42vh - 60px)';
+    expanded = !expanded;
+    document.querySelector('.bottom-sheet').style.maxHeight = expanded ? '80vh' : '42vh';
+    document.querySelector('.sheet-scroll').style.maxHeight = expanded ? 'calc(80vh - 60px)' : 'calc(42vh - 60px)';
   });
 }
-
-// Init on load
 document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
