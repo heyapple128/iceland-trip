@@ -222,9 +222,10 @@ const DAYS = [
       { id:'d2-4', type:'camp', lat:63.853,lng:-20.072, is:'Gaddstaðaflatir', cn:'加德斯塔营地', desc:'农场营地·设施好·环境优美' },
     ], camp:{ name:'Gaddstaðaflatir Camping', tags:['农场营地','淋浴'] }
   },
-  { day:'D3', date:'6/16', name:'南岸', nameCn:'南岸', route:'塞里雅兰 → 斯科加 → 黑沙滩 → Svínafell',
+  { day:'D3', date:'6/16', name:'南岸', nameCn:'南岸', route:'塞里雅兰 → Gljúfrabúi → 斯科加 → 黑沙滩 → Svínafell',
     points:[
       { id:'d3-1', type:'attraction', lat:63.615,lng:-19.988, is:'Seljalandsfoss', cn:'塞里雅兰瀑布', desc:'瀑布后可行走' },
+      { id:'d3-1b', type:'attraction', lat:63.616,lng:-19.987, is:'Gljúfrabúi', cn:'隐藏瀑布', desc:'藏在岩石裂缝里·需涉水' },
       { id:'d3-2', type:'attraction', lat:63.532,lng:-19.512, is:'Skógafoss', cn:'斯科加瀑布', desc:'可登顶俯瞰' },
       { id:'d3-3', type:'attraction', lat:63.399,lng:-19.129, is:'Dyrhólaey', cn:'迪霍拉里海岬', desc:'黑沙滩观景台' },
       { id:'d3-4', type:'attraction', lat:63.405,lng:-19.072, is:'Reynisfjara', cn:'黑沙滩', desc:'玄武岩柱+巨浪' },
@@ -388,6 +389,7 @@ const ROAD_META = {
   'd1-3': { min:35, road:'hard' },   // Hvammsvík→Þingvellir 部分窄路/碎石
   'd2-2': { min:8, road:'easy' },     // Geysir→Gullfoss 短途平缓
   'd3-2': { min:18, road:'easy' },    // Skógafoss→Dyrhólaey
+  'd3-1b': { min:2, road:'easy' },    // Seljalandsfoss→Gljúfrabúi 步行
   'd3-3': { min:4, road:'easy' },     // Dyrhólaey→Reynisfjara
   'd3-4': { min:4, road:'easy' },     // Reynisfjara→Vík
   'd4-2': { min:2, road:'easy' },     // Jökulsárlón→Diamond Beach 同一区域
