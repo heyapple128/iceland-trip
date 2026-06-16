@@ -620,7 +620,7 @@ function init() {
   allTab.addEventListener('click', showAllDays);
   tabs.appendChild(allTab);
   
-  // Day tabs D1-D8
+  // Day tabs
   DAYS.forEach((day, i) => {
     const tab = document.createElement('div');
     tab.className = 'day-tab';
@@ -630,7 +630,18 @@ function init() {
   });
   
   buildMarkers();
-  showAllDays();
+  
+  // Auto-detect today
+  const now = new Date();
+  const todayStr = `${now.getMonth()+1}/${now.getDate()}`;
+  const todayIdx = DAYS.findIndex(d => d.date === todayStr);
+  if (todayIdx >= 0) {
+    showDay(todayIdx);
+    allTab.className = 'day-tab';
+    tabs.children[todayIdx + 1].className = 'day-tab active';
+  } else {
+    showAllDays();
+  }
   
   // Nav buttons
   document.getElementById('prevDay').addEventListener('click', () => {
