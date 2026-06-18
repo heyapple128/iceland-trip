@@ -246,7 +246,7 @@ const DAYS = [
       { id:'d4-5', type:'camp', lat:64.253,lng:-15.212, is:'Höfn Camping', cn:'赫本营地', desc:'有厨房·热水' },
     ], camp:{ name:'Höfn Camping', tags:['厨房','热水'] }
   },
-  { day:'D5', date:'6/18', name:'东部峡湾', nameCn:'东部峡湾', route:'东峡湾小镇 → 蓝教堂 → Egilsstaðir',
+  { day:'D5', date:'6/18', name:'东部峡湾', nameCn:'东部峡湾', route:'Höfn → Djúpivogur → 东峡湾小镇 → 蓝教堂 → Egilsstaðir',
     points:[
       { id:'d5-1', type:'attraction', lat:64.740,lng:-14.240, is:'Djúpivogur', cn:'久皮沃古尔', desc:'东峡湾小渔村' },
       { id:'d5-2', type:'attraction', lat:64.930,lng:-14.010, is:'Fáskrúðsfjörður', cn:'法斯克鲁兹峡湾', desc:'法国文化小镇' },
@@ -399,7 +399,10 @@ const ROAD_META = {
   'd3-4': { min:4, road:'easy' },     // Reynisfjara→Vík
   'd4-2': { min:2, road:'easy' },     // Jökulsárlón→Diamond Beach 同一区域
   'd4-3': { min:35, road:'hard' },    // Diamond Beach→Vestrahorn 部分碎石路
-  'd5-2': { min:40, road:'hard' },    // Fáskrúðsfjörður→Seyðisfjörður 山路93号
+  'd5-1': { min:30, road:'normal' },   // Djúpivogur→Fáskrúðsfjörður Route1
+  'd5-2': { min:35, road:'hard' },    // Fáskrúðsfjörður→Seyðisfjörður 山路93号+隧道
+  'd5-3': { min:1, road:'easy' },     // Seyðisfjörður→蓝教堂 步行
+  'd5-4': { min:6, road:'easy' },     // 蓝教堂→Egilsstaðir营地
   'd6-0': { min:170, road:'normal' },  // Egilsstaðir→Húsavík 1号公路+85号路
   'd6-1': { min:50, road:'normal' },   // Húsavík→Hverir 85号路南下
   'd6-2': { min:4, road:'easy' },      // Hverir→Grjótagjá 米湖区域
