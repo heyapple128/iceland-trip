@@ -266,10 +266,12 @@ const DAYS = [
       { id:'d6-6', type:'camp', lat:65.620,lng:-16.980, is:'Hamrar Camping', cn:'哈姆拉营地（米湖）', desc:'近阿克雷里' },
     ], camp:{ name:'Hamrar Camping', note:'📍 阿克雷里方向' }
   },
-  { day:'D7', date:'6/20', name:'北部→斯奈山', nameCn:'北部→斯奈山', route:'阿克雷里 → 教会山 → Grundarfjörður',
+  { day:'D7', date:'6/20', name:'北部→斯奈山', nameCn:'北部→斯奈山', route:'阿克雷里植物园☕ → 教堂 → Strikið午餐 → 教会山 → Grundarfjörður',
     points:[
-      { id:'d7-1', type:'attraction', lat:65.684,lng:-18.088, is:'Akureyri', cn:'阿克雷里', desc:'北部首府·爱心红灯' },
+      { id:'d7-1', type:'attraction', lat:65.684,lng:-18.088, is:'Akureyri', cn:'阿克雷里', desc:'北部首府·主街+爱心红灯' },
+      { id:'d7-1b', type:'food', lat:65.682,lng:-18.097, is:'Lyst Café', cn:'植物园咖啡', desc:'植物园里·早安咖啡' },
       { id:'d7-2', type:'attraction', lat:65.684,lng:-18.100, is:'Akureyrarkirkja', cn:'阿克雷里教堂', desc:'地标教堂' },
+      { id:'d7-1c', type:'food', lat:65.683,lng:-18.092, is:'Strikið', cn:'Strikið餐厅', desc:'午餐·龙虾寿司+烤羊排+三文鱼' },
       { id:'d7-3', type:'attraction', lat:64.925,lng:-23.310, is:'Kirkjufell', cn:'教会山', desc:'冰岛最上镜的山' },
       { id:'d7-4', type:'camp', lat:64.930,lng:-23.280, is:'Grundarfjörður Campsite', cn:'格伦达菲厄泽营地', desc:'就在教会山旁边' },
     ], camp:{ name:'Grundarfjörður Campsite', note:'就在教会山旁边' }
@@ -407,8 +409,11 @@ const ROAD_META = {
   'd6-1': { min:50, road:'normal' },   // Húsavík→Hverir 85号路南下
   'd6-2': { min:4, road:'easy' },      // Hverir→Grjótagjá 米湖区域
   'd6-3': { min:3, road:'easy' },      // Grjótagjá→Dimmuborgir
-  'd7-2': { min:220, road:'hard' },   // Akureyrarkirkja→Kirkjufell ~300km Route1+54 部分窄路/长距离
-  'd7-3': { min:1, road:'easy' },     // Kirkjufell→营地 步行
+  'd7-1b': { min:5, road:'easy' },    // Akureyri→Lyst植物园 步行
+  'd7-2': { min:5, road:'easy' },     // Lyst→教堂 步行
+  'd7-1c': { min:3, road:'easy' },    // 教堂→Strikið 步行
+  'd7-3': { min:220, road:'hard' },   // Strikið→Kirkjufell ~300km Route1+54 部分窄路/长距离
+  'd7-4': { min:1, road:'easy' },     // Kirkjufell→营地 步行
   'd8-2': { min:12, road:'easy' },    // Arnarstapi→Búðakirkja
   'd8-3': { min:2, road:'easy' },     // Búðakirkja→Búðir
   'd10-0': { min:120, road:'hard' },  // BSÍ→Landmannalaugar F-road高地
