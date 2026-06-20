@@ -246,12 +246,12 @@ const DAYS = [
       { id:'d4-5', type:'camp', lat:64.253,lng:-15.212, is:'Höfn Camping', cn:'赫本营地', desc:'有厨房·热水' },
     ], camp:{ name:'Höfn Camping', tags:['厨房','热水'] }
   },
-  { day:'D5', date:'6/18', name:'东部峡湾', nameCn:'东部峡湾', route:'Höfn → Djúpivogur → 东峡湾小镇 → 蓝教堂 → Egilsstaðir',
+  { day:'D5', date:'6/18', name:'东部峡湾', nameCn:'东部峡湾', route:'冰河湖划船 🛶 → Djúpivogur → 东峡湾小镇 → Egilsstaðir',
+    schedule:[{ time:'09:00', action:'Jökulsárlón 冰河湖划船' },{ time:'10:30', action:'划船结束·出发东行' }],
     points:[
+      { id:'d5-0', type:'attraction', lat:64.078,lng:-16.231, is:'Jökulsárlón', cn:'冰河湖', desc:'🛶 上午冰河湖划船' },
       { id:'d5-1', type:'attraction', lat:64.740,lng:-14.240, is:'Djúpivogur', cn:'久皮沃古尔', desc:'东峡湾小渔村' },
       { id:'d5-2', type:'attraction', lat:64.930,lng:-14.010, is:'Fáskrúðsfjörður', cn:'法斯克鲁兹峡湾', desc:'法国文化小镇' },
-      { id:'d5-3', type:'attraction', lat:65.260,lng:-13.910, is:'Seyðisfjörður', cn:'塞济斯菲厄泽', desc:'彩色小镇' },
-      { id:'d5-4', type:'attraction', lat:65.260,lng:-13.900, is:'Seyðisfjarðarkirkja', cn:'蓝教堂', desc:'标志性蓝色教堂' },
       { id:'d5-5', type:'camp', lat:65.260,lng:-13.800, is:'Egilsstaðir Campsite', cn:'埃基尔斯塔迪尔营地', desc:'设施非常好' },
     ], camp:{ name:'Egilsstaðir Campsite', note:'设施非常好' }
   },
@@ -401,10 +401,10 @@ const ROAD_META = {
   'd3-4': { min:4, road:'easy' },     // Reynisfjara→Vík
   'd4-2': { min:2, road:'easy' },     // Jökulsárlón→Diamond Beach 同一区域
   'd4-3': { min:35, road:'hard' },    // Diamond Beach→Vestrahorn 部分碎石路
-  'd5-1': { min:30, road:'normal' },   // Djúpivogur→Fáskrúðsfjörður Route1
-  'd5-2': { min:35, road:'hard' },    // Fáskrúðsfjörður→Seyðisfjörður 山路93号+隧道
-  'd5-3': { min:1, road:'easy' },     // Seyðisfjörður→蓝教堂 步行
-  'd5-4': { min:6, road:'easy' },     // 蓝教堂→Egilsstaðir营地
+  'd5-0': { min:50, road:'normal' },   // Höfn→Jökulsárlón 返回冰河湖
+  'd5-1': { min:55, road:'normal' },   // Jökulsárlón→Djúpivogur Route1
+  'd5-2': { min:30, road:'normal' },   // Djúpivogur→Fáskrúðsfjörður Route1
+  'd5-3': { min:50, road:'normal' },   // Fáskrúðsfjörður→Egilsstaðir Route1
   'd6-0': { min:50, road:'normal' },   // Egilsstaðir→Stuðlagil Route1+923
   'd6-1': { min:50, road:'normal' },   // Stuðlagil→Hverir Route1 向东
   'd6-2': { min:4, road:'easy' },      // Hverir→Grjótagjá 米湖区域
