@@ -72,6 +72,7 @@ html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMa
 .poi-icon.attraction { background: rgba(255,107,107,0.2); }
 .poi-icon.camp { background: rgba(78,205,196,0.2); }
 .poi-icon.shop { background: rgba(255,217,61,0.2); }
+.poi-icon.cafe { background: rgba(139,90,43,0.2); }
 .poi-info { flex: 1; min-width: 0; }
 .poi-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
 .is-name { color: var(--accent2); }
@@ -294,7 +295,7 @@ const DAYS = [
   { day:'D9', date:'6/22', name:'雷市休闲', nameCn:'雷克雅未克市区', route:'哈尔格林姆教堂(登顶+荡秋千) → Reykjavik Roasters → 主街纪念品 → 国立博物馆 → Harpa → 海钓 → 教堂夜景',
     points:[
       { id:'d9-1', type:'attraction', lat:64.142,lng:-21.927, is:'Hallgrímskirkja', cn:'哈尔格林姆教堂（登顶+荡秋千）', desc:'登顶俯瞰雷市·教堂前秋千拍照点' },
-      { id:'d9-2', type:'shop', lat:64.147,lng:-21.942, is:'Reykjavik Roasters', cn:'雷克雅未克烘焙咖啡', desc:'当地精品咖啡·Kárastígur 1' },
+      { id:'d9-2', type:'cafe', lat:64.147,lng:-21.942, is:'Reykjavik Roasters', cn:'雷克雅未克烘焙咖啡', desc:'当地精品咖啡·Kárastígur 1' },
       { id:'d9-3', type:'shop', lat:64.146,lng:-21.939, is:'Laugavegur', cn:'主街纪念品店', desc:'雷市主要购物街·纪念品' },
       { id:'d9-4', type:'attraction', lat:64.141,lng:-21.945, is:'Þjóðminjasafn Íslands', cn:'冰岛国立博物馆', desc:'冰岛历史·纪念品商店' },
       { id:'d9-5', type:'attraction', lat:64.150,lng:-21.933, is:'Harpa', cn:'哈帕音乐厅', desc:'玻璃幕墙建筑·拍照' },
@@ -576,7 +577,7 @@ function renderSheet(day, idx) {
   
   day.points.forEach((p, pi) => {
     if (p.type === 'camp') return;
-    const emoji = { attraction:'📍', camp:'🏕️', shop:'🛒', food:'🍽️', airport:'✈️' };
+    const emoji = { attraction:'📍', camp:'🏕️', shop:'🛒', food:'🍽️', airport:'✈️', cafe:'☕' };
     html += `<div class="poi-item">
       <div class="poi-icon ${p.type}">${emoji[p.type] || '📍'}</div>
       <div class="poi-info">
